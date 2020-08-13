@@ -11,14 +11,7 @@ import javax.websocket.server.ServerEndpoint;
 @ServerEndpoint(value="/game/{userId}")
 public class GameAPI {
     // 这个类就表示服务器收到的 websocket 请求
-    // 匹配请求
-    static class MatchRequest {
-        public String type;
-        public int userId;
-    }
-
-    // 落子请求
-    static class PutChessRequest {
+    static class Request {
         public String type;
         public int userId;
         public int roomId;
@@ -61,14 +54,21 @@ public class GameAPI {
     // message 请求内容是一个 JSON 结构的字符串, 于是就需要针对 JSON 进行解析
     // 不需要自己实现, 用 GSON 即可
     @OnMessage
-    public void onMessage(String message, Session session) {
+    public void onMessage(String message, Session session) throws InterruptedException {
         System.out.printf("收到玩家 %d 的消息: %s\n", userId, message);
 
         // 后续的处理请求的逻辑
         // 实例化 Gson 对象
         Gson gson = new GsonBuilder().create();
-        // 这一句代码, 就把 message 这个 JSON 格式的字符串转成了 需要的 Request 对象
-        MatchRequest matchRequest = gson.fromJson(message, MatchRequest.class);
-        PutChessRequest putChessRequest = gson.fromJson(message, PutChessRequest.class);
+        // 这两句代码, 就把 message 这个 JSON 格式的字符串转成了 需要的 Request 对象
+        Request request = gson.fromJson(message, Request.class);
+        if (request.type.equals("startMatch")) {
+            // 执行匹配逻辑
+            Matcher.getInstance().addToMatchQueue(request);
+        } else if (request.type.equals("putChess")) {
+            // 执行落子逻辑
+        } else {
+            System.out.println("非法的 type 值! " + request.type);
+        }
     }
 }
