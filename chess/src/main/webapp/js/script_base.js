@@ -80,6 +80,7 @@ function startMatch(userId) {
 // 发出匹配请求之后,就准备处理匹配响应了
 function handlerStartMatch(event) {
     // 读取相应内容
+    // event.data 是 String 类型的, 需要转换成 JSON 类型的
     var response = JSON.parse(event.data) // 才能得到真实的服务器返回的数据
     console.log("handlerStartMatch: " + response);
     // 过滤非法的响应类型
