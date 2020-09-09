@@ -1,4 +1,5 @@
 package niko.config.web;//import frank.base.ResponseResult;
+import niko.base.ResponseResult;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
@@ -19,9 +20,10 @@ public class RequestResponseBodyMethodProcessorWrapper implements HandlerMethodR
 
     @Override
     public void handleReturnValue(Object returnValue, MethodParameter returnType, ModelAndViewContainer mavContainer, NativeWebRequest webRequest) throws Exception {
-//        if(!(returnValue instanceof ResponseResult)){
-//            returnValue = ResponseResult.ok(returnValue);
-//        }
+        // returnValue 是 Controller 请求方法执行完, 返回值
+        if(!(returnValue instanceof ResponseResult)){ // 返回值本身就是需要的类型, 不进行处理
+            returnValue = ResponseResult.ok(returnValue);
+        }
         delegate.handleReturnValue(returnValue, returnType, mavContainer, webRequest);
     }
 }

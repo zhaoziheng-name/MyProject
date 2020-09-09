@@ -15,6 +15,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.validation.ConstraintViolationException;
 
+// 使用 lombok 定义的日志注解, 可以使用 log 变量, 来记录日志
 @Slf4j
 @ControllerAdvice
 public class ExceptionAdvisor {
@@ -51,6 +52,13 @@ public class ExceptionAdvisor {
         log.debug("================================");
         log.debug("找不到http请求处理器", e);
     }
+
+    // SpringMVC 框架, 在调用 Controller 方法时, 类似这样的处理方式:
+    // try {
+    //      controller 方法调用();
+    // } catch () { =====> @ExceptionHandler 需要捕获的异常
+    //      调用方法
+    // }
 
 //    @ExceptionHandler(BaseException.class)
 //    @ResponseStatus(HttpStatus.OK)
